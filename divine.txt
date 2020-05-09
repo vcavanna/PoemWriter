@@ -1,0 +1,89 @@
+I like this poem, especially this line
+
+10
+7
+i
+0
+null
+null
+[AY]
+[1]
+like
+0
+null
+null
+[L, AY, K]
+[1]
+this
+0
+null
+null
+[DH, IH, S]
+[0]
+poem
+0
+null
+null
+[P, OW, AH, M]
+[1, 0]
+especially
+0
+null
+null
+[IH, S, P, EH, SH, L, IY]
+[0, 1, 0]
+this
+0
+null
+null
+[DH, IH, S]
+[0]
+line
+0
+null
+null
+[L, AY, N]
+[1]
+true
+I consider the entire poem divine
+
+12
+6
+i
+0
+null
+null
+[AY]
+[1]
+consider
+0
+null
+null
+[K, AH, N, S, IH, D, ER]
+[0, 1, 0]
+the
+0
+null
+null
+[DH, IY]
+[0]
+entire
+0
+null
+null
+[IH, N, T, AY, ER]
+[0, 1, 0]
+poem
+0
+null
+null
+[P, OW, AH, M]
+[1, 0]
+divine
+0
+null
+null
+[D, IH, V, AY, N]
+[0, 1]
+true
+/ done
