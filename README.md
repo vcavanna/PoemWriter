@@ -20,6 +20,9 @@ Features:
 
 Planned Improvements:
 1. Refactoring. PoemWriter needs to be split into multiple files, although I'm also open to replacing the substitute Java datatypes that we made (preceded by "DS", i.e. DSArrayList) with the standard datatypes. I would follow the principles of the Clean Code book to better understand what would simplify this project.
+2. Removing any snark in the PoemWriter std_out. "I'll take that as a no", "commands", "Dr. Hochberg says", etc.
+3. Improving UX by displaying progress, metrics etc and removing phoenetics arrays.
+4. Tidy up the "/ export" command to clearly explain the difference between the first prompt and the second prompt.
 
 Possible Next Steps:
 1. Saving written poems to a cloud database instead of simply locally, implementing a rudimentary sign-in process to make writing poetry simpler.
@@ -33,11 +36,14 @@ Possible Next Steps:
   javac PoemWriter.java
   java PoemWriter
 5. You can begin by typing "/ help" -> "/ commands" to learn which commands can power the project.
-6. I'll provide examples of how you can use this project soon.
+
+<h3>Writing new poems workflow</h3>
+1. Start the program with the above instructions.
+2. Type "/ rhymeScheme" to begin setting the rhyme scheme. Assigning a letter to a line means that line rhymes with all other lines assigned to the same letter... i.e. 'a' lines rhyme together.
+3. Type "/ syllableCount" to set the number of syllables in each line.
+4. Type the poem in its entirety, allowing for corrections in the file.
+5. After entering the last line based on rhymeScheme and syllableCount, the application won't allow any more entries.
+6. Type "/ export" and answer the prompts.
 
 <h2>Credits</h2>
-Collaborated with the class for almost all of this project, except for my work in the PoemWriter class. A very big thank you to Dr. Hochberg for teaching the class and introducing me to this.
-
-Also, if you followed tutorials or referenced a certain material that might help the user to build that particular project, include links to those here as well.
-
-This is just a way to show your appreciation and also to help others get a first hand copy of the project.
+Collaborated with the class for almost all of this project, except for my work in the PoemWriter class. A very big thank you to Dr. Hochberg for teaching the class.
