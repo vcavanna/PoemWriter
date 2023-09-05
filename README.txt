@@ -1,1 +1,0 @@
-Discrete Structures Readme for Vincent... it's a work in progress :)
