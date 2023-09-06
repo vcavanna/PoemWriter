@@ -10,25 +10,22 @@ import java.util.HashSet;
 
 class PoemWriter extends Poet {
   static Scanner input = new Scanner(System.in);
-  static DSArrayList<Line> poem;
+  // static DSArrayList<Line> poem;
   static String[] arrayInput = null;
   static DSArrayList<String> rhymes;
   static DSArrayList<Integer> syllableCount;
   static HashMap<String, String> wordRhymes;
   static int lineEditing = 0;
   static boolean failsRhymeCheck;
-  static boolean failsSyllableCheck;
   static boolean checkingRhyme = true;
   static boolean checkingSyllables = true;
+  static Poem poem;
   
   public static void main(String[] args) {
     Words = new DSArrayList<Word>();
     readABookMakeUnique("JaneAusten.txt");
     readCMUPron("cmupron.txt");
-    poem = new DSArrayList<Line>();
-    rhymes = new DSArrayList<String>();
-    wordRhymes = new HashMap<String, String>();
-    syllableCount = new DSArrayList<Integer>();
+    poem = new Poem();
     System.out.println("Hi there. Type a line of poetry to begin. Type '/ help' to learn how to work this program.");
     takeInputs();
   }
@@ -80,10 +77,10 @@ class PoemWriter extends Poet {
               importPoem();
               myInput = "";
             } else if(newCommand.equals("rhymeScheme")) {    // Sets or changes the rhyme scheme of the poem
-              rhymeScheme();
+              poem.rhymeScheme();
               myInput = "";
             } else if(newCommand.equals("syllableCount")) {  // Sets or changes the meter of the poem
-              syllables();
+              poem.syllables();
               myInput = "";
             } else {                                         // If '/' isn't followed by a command.
               System.out.println("Failed input. " + newCommand + " is not a command. Input '/ help' for help.");
@@ -101,24 +98,7 @@ class PoemWriter extends Poet {
       }
       
       if(!(myInput.equals(""))){
-        Line l = new Line();
-        l = addLineInfo(myInput, l);
-        if(checkingRhyme)
-          checkRhymeScheme(l);
-        if(checkingSyllables)
-          checkSyllableCount(l);
-        if(failsRhymeCheck){
-          System.out.println("failsRhymeCheck");
-        } else if (failsSyllableCheck) {
-          System.out.println("failsSyllableCheck");
-        } else if(poem.size() <= lineEditing) {
-          poem.add(l);
-          printPoem();
-          lineEditing++;
-        } else {
-          poem.set(lineEditing, l);
-          lineEditing++;
-        }
+        poem.addLine(myInput);
       }
       
       if(continueNow == true){
@@ -129,13 +109,6 @@ class PoemWriter extends Poet {
         break;
       }
       
-    }
-  }
-  
-  public static void printPoem() {
-    int limit = poem.size();
-    for(int i = 0; i < limit; i++) {
-      System.out.println(poem.get(i));
     }
   }
   
@@ -226,7 +199,7 @@ class PoemWriter extends Poet {
     String savedFile = "";
     String fileName;
     
-    while(true) {
+    while(true) { // TODO: Make this a function
       System.out.println("What do you want to name your new file? (Type 'quit' to quit.)");
       fileName = input.nextLine();
       try {
@@ -258,11 +231,7 @@ class PoemWriter extends Poet {
     }
     
     PrintWriter out = new PrintWriter(fileName + ".txt");
-    
-    for(int i = 0; i < poem.size(); i++) {
-      savedFile += saveLine(poem.get(i));
-    }
-    savedFile += "/ done";
+    poem.save();
     out.println(savedFile);
     out.close();
   }
@@ -344,8 +313,8 @@ class PoemWriter extends Poet {
       savedFile += " ~ " + title + " ~ \n";
       savedFile += "  by " + author + "\n";
       
-      for(int i = 0; i < poem.size(); i++) {
-        savedFile += poem.get(i).line + "\n";
+      for(int i = 0; i < poem.lines.size(); i++) {
+        savedFile += poem.lines.get(i).line + "\n";
       }
       out.println(savedFile);
       out.close();
@@ -366,7 +335,7 @@ class PoemWriter extends Poet {
         break;
       }
       
-      poem = new DSArrayList<Line>();
+      poem = new Poem();
       
       try{
         // Wraps a FileReader object around the book (on disk) 
@@ -435,9 +404,9 @@ class PoemWriter extends Poet {
           x = reader.readLine();
           l.accurate = Boolean.parseBoolean(x);
           x = reader.readLine();
-          poem.add(l);
+          poem.lines.add(l);
           System.out.println("Successfully loaded poem. Returning to main...");
-          printPoem();
+          poem.printPoem();
           quit = true;
         }
       } catch(IOException e){
@@ -451,7 +420,7 @@ class PoemWriter extends Poet {
   }
   
   public static void importPoem() {
-    if(poem.size() < 1){
+    if(poem.lines.size() < 1){
       String importInput = "";
       System.out.println("What kind of poem would you like to import?");
       System.out.println("Type 'options' to see what options you have. Type 'quit' to quit.");
@@ -532,212 +501,6 @@ class PoemWriter extends Poet {
       }
     } else {
       System.out.println("You can't import a poem style if you've already started writing.");
-    }
-  }
-  
-  public static void rhymeScheme() {
-    String rhymesInput = "";
-    int i = 0;
-    
-    if(rhymes.size() == 0) {
-      while(true) {
-        System.out.println("What rhyme do you want line " + (i + 1) + " to have?");
-        System.out.print("Options include: ");
-        
-        Object[] uniqueRhymesArray = wordRhymes.keySet().toArray();
-        
-        if(rhymes.size() > 0) {
-          for(int j = 0; j < uniqueRhymesArray.length + 1; j++) {
-            System.out.print("'" + "abcdefghijklmnopqrstuvwxyz".substring(j, j + 1) + "', ");
-          }
-        
-        } else {
-          System.out.println("'a'");
-        }
-        System.out.println("You can also just press enter to have it not rhyme, or type 'quit' when you've reached the last line.");
-        rhymesInput = input.nextLine();
-        
-        if(rhymesInput.equals("quit")) {
-          System.out.println("Quitting to main...");
-          break;
-        } else if ("abcdefghijklmnopqrstuvwxyz".substring(0, uniqueRhymesArray.length + 1).contains(rhymesInput)) {
-          rhymes.add(rhymesInput);
-          wordRhymes.put(rhymesInput, "");
-          i++;
-        } else {
-          System.out.println("That isn't one of the options.");
-        }        
-        
-        if ((syllableCount.size() == rhymes.size()) && (syllableCount.size() > 0)) {
-          System.out.println("According to the information you entered previously, that's the last line of the poem. Quitting to main...");
-          break;
-        }
-      }
-    } else {
-      System.out.println("You can't set the rhyme scheme if you've already started writing the poem.");
-    }
-  }
-  
-  public static void syllables() {
-    int i = 0;
-    String syllablesInput = "";
-    if(syllableCount.size() == 0) {
-      while(true) {
-        System.out.println("How many syllables do you want line " + (i + 1) + " to have?");
-        System.out.println("You can also just press enter to not require a syllable count, or type 'quit' when you've reached the last line.");
-        syllablesInput = input.nextLine();
-        
-        if(syllablesInput.equals("quit")) {
-          System.out.println("Quitting to main...");
-          break;
-        } else if(isInteger(syllablesInput)) {
-          syllableCount.add(Integer.parseInt(syllablesInput));
-        } else {
-          System.out.println("That is not a number.");
-        }
-        if ((rhymes.size() == syllableCount.size()) && (rhymes.size() > 0)) {
-          System.out.println("According to the information you entered previously, that's the last line of the poem. Quitting to main...");
-          break;
-        }
-        i++;
-      }
-    } else {
-      System.out.println("You can't set the syllable count if you've already started writing the poem.");
-    }
-  }
-  
-  public static Line addLineInfo(String newLine, Line l) {
-    Word newWord;
-    String[] arrayLine = newLine.split(" ");
-    l.line = newLine;
-    l.wordCount = arrayLine.length;
-    for(String w : arrayLine) {
-      // Remove all the extra stuff, capitalizations, etc.
-      if(wordMap.containsKey(w.toLowerCase().replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", ""))) {             // If a word object exists already, we take it
-        newWord = wordMap.get(w.toLowerCase().replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", ""));
-      } else {                                 // If no word object exists already, we create our own partial one and let the program know it's know accurate
-        newWord = new Word();
-        newWord.word = w;
-        l.accurate = false;
-      }
-      l.wordData.add(newWord);
-      l.syllableCount += newWord.stresses.size();
-    }
-    return l;
-  }
-  
-  public static void checkRhymeScheme(Line l) {
-    Word w = l.wordData.get(l.wordCount - 1);
-    int numWords = Words.size();
-    String checkInput = "";
-    
-    if(w.phonemes.size() == 0) {
-      System.out.println("Can't find the word for " + w.word);
-      System.out.println("Do you want to enter the line anyway? ('yes' / 'no')");
-      System.out.println("Doing so will stop any automatic rhyming for the poem.");
-      checkInput = input.nextLine();
-      if(checkInput.equals("yes")) {
-        failsRhymeCheck = true;
-        checkingRhyme = false;
-      } else {
-        failsRhymeCheck = true;
-      }
-    } else if(!(rhymes.get(lineEditing) == null)) {
-      wordRhymes.replace(rhymes.get(lineEditing), "", w.word);
-      Word rhymingWord = wordMap.get(wordRhymes.get(rhymes.get(lineEditing)));
-      System.out.println(rhymingWord);
-      System.out.println(w);
-      if(w.endsWith(rhymingWord.getRhymeNeeds())) {
-        failsRhymeCheck = false;
-      } else {
-        System.out.println("The CMUPron file that *Dr. Robert Hochberg* gave us says that " + w.word + " and " + rhymingWord.word + " don't rhyme.");
-        System.out.println("Do you want to keep the line anyway? (Type 'yes' if you want to override, type 'no' if you want to rewrite the line.)");
-        checkInput = input.nextLine();
-        if(checkInput.equals("yes")) {
-          System.out.print("Overriding...");
-          failsRhymeCheck = false;
-        } else {
-          System.out.println("I'll take that as a no.");
-          failsRhymeCheck = true;
-           
-        }
-      }
-    } else {
-      if(poem.size() == 0) {
-        System.out.println("Do you want to set a rhyme scheme first? ('yes' / 'no')");
-        System.out.println("Know that saying no means that PoemWriter won't track the rhyme scheme for this poem.");
-        checkInput = input.nextLine();
-        if(checkInput.equals("yes")) {
-          System.out.println("Returning to main...");
-          failsRhymeCheck = true;
-          
-        } else {
-          System.out.println("Removing the rhyme scheme requirement...");
-          failsRhymeCheck = false;
-          checkingRhyme = false;
-          
-        }
-      } else {
-        System.out.println("By all accounts, the poem is finished. You can export it, or you can start over.");
-        failsRhymeCheck = true;
-      }
-    }
-  }
-  
-  public static void checkSyllableCount(Line l) {
-    String checkInput = "";
-    if ((poem.size() == syllableCount.size()) && (poem.size() != 0)) {
-        System.out.println("By all accounts, the poem is finished. You can export it, or you can start over.");
-        failsSyllableCheck = true;
-    } else if(l.accurate) {
-      if(!(syllableCount.get(lineEditing) == null)) {
-        if(l.syllableCount == syllableCount.get(lineEditing)) {  // If syllables line up
-          failsSyllableCheck = false;
-        } else {                                                 // If syllables don't line up
-          System.out.println("The syllable count you gave, " + syllableCount.get(lineEditing) + ", and the count for the line, " + l.syllableCount + ", don't match.");
-          failsSyllableCheck = true;
-        }
-      } else {                                                   // If syllables haven't been set yet
-        System.out.println("Do you want to set your syllable count first? ('yes' / 'no')");
-        System.out.println("Know that saying no means that PoemWriter won't track the syllable count for this poem.");
-        checkInput = input.nextLine();
-        if(checkInput.equals("yes")) {
-          System.out.println("Returning to main to rewrite the line...");
-          failsSyllableCheck = true;
-          
-        } else {
-          System.out.println("Removing the syllable count requirement...");
-          failsSyllableCheck = false;
-          checkingSyllables = false;
-          
-        }
-      }
-    } else if(poem.size() == 0) {
-      System.out.println("It seems that at least one of the words in the line isn't in our database.");
-      System.out.println("Do you want to rewrite the lines to get a poem with a syllable count? ('yes' / 'no')");
-      System.out.println("Know that saying no means that PoemWriter won't track the syllable count for this poem.");
-      checkInput = input.nextLine();
-      if(checkInput.equals("yes")) {
-        System.out.println("Returning to main to rewrite the line...");
-        failsSyllableCheck = true;
-        
-      } else {
-        System.out.println("Removing the syllable count requirement...");
-        failsSyllableCheck = false;
-        checkingSyllables = false;
-        
-      }
-    }
-  }
-  
-  
-  public static boolean isInteger(String input) {
-    try {
-      Integer.parseInt(input);
-      return true;
-    }
-    catch(NumberFormatException e) {
-      return false;
     }
   }
 }
