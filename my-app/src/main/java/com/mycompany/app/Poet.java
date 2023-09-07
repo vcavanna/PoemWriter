@@ -26,8 +26,6 @@ class Poet{
     
     long startTime = System.currentTimeMillis(); // Note the start time
     
-    //readABook("JaneAusten.txt");
-    //readABookInsertUnique("JaneAusten.txt");
     readABookMakeUnique("TaylorSwiftLyrics.txt");
     System.out.println("Time = " + (System.currentTimeMillis() - startTime));
     System.out.println("We read " + Words.size() + " words!");
@@ -85,7 +83,6 @@ class Poet{
         for(int j = 0; j < wordsOnLine.length; j++){
           // Create a new Word object in memory
           Word w = new Word();
-          //Word w = new Word("ZOLLARS  Z AA1 L ER0 Z");
           // Fills the "word" field inside w with
           // the jth word on this line of text
           w.word = wordsOnLine[j].toLowerCase().
@@ -93,7 +90,6 @@ class Poet{
           // We use "\\" to escape special characters in a string
           Words.add(w);
         }
-        //System.out.println(""); // Go to the next line
         x = reader.readLine();
       }
     } catch(IOException e){
@@ -125,7 +121,6 @@ class Poet{
         for(int j = 0; j < wordsOnLine.length; j++){
           // Create a new Word object in memory
           Word w = new Word();
-          //Word w = new Word("ZOLLARS  Z AA1 L ER0 Z");
           // Fills the "word" field inside w with
           // the jth word on this line of text
           w.word = wordsOnLine[j].toLowerCase().
@@ -298,7 +293,6 @@ class Poet{
     String poetryLine = "";
     
     while(!stressPattern.equals("")) { // will chop off prefixes as we find words
-      // System.out.println("Remaining stresses: " + stressPattern);
       // Get a random word
       int index = generator.nextInt(Words.size());
       Word randWord = Words.get(index); // This is a nice, random word
@@ -330,7 +324,6 @@ class Poet{
     String poetryLine = "";
     
     while(!stressPattern.equals("")) { // will chop off prefixes as we find words
-      // System.out.println("Remaining stresses: " + stressPattern);
       // Get a random word
       int index = generator.nextInt(Words.size());
       Word randWord = Words.get(index); // This is a nice, random word

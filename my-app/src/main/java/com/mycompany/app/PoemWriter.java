@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 class PoemWriter extends Poet {
   static Scanner input = new Scanner(System.in);
-  // static ArrayList<Line> poem;
   static String[] arrayInput = null;
   static ArrayList<String> rhymes;
   static ArrayList<Integer> syllableCount;
@@ -26,8 +25,8 @@ class PoemWriter extends Poet {
   
   public static void main(String[] args) {
     Words = new ArrayList<Word>();
-    readABookMakeUnique("JaneAusten.txt");
-    readCMUPron("cmupron.txt");
+    readABookMakeUnique("C:\\Users\\Vincent\\Documents\\computerPrograms\\poemWriter\\my-app\\src\\main\\java\\com\\mycompany\\app\\JaneAusten.txt");
+    readCMUPron("C:\\\\Users\\\\Vincent\\\\Documents\\\\computerPrograms\\\\poemWriter\\\\my-app\\\\src\\\\main\\\\java\\\\com\\\\mycompany\\\\app\\\\cmupron.txt");
     poem = new Poem();
     System.out.println("Hi there. Type a line of poetry to begin. Type '/ help' to learn how to work this program.");
     takeInputs();

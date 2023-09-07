@@ -80,7 +80,20 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
         String checkInput = "";
         if (!checkingRhyme) {
             return false; // Passes rhymeCheck
-        } else if(w.phonemes.size() == 0) {
+        } else if(rhymes.size() == 0) {
+            System.out.println("Do you want to set a rhyme scheme first? ('yes' / 'no')");
+            System.out.println("Know that saying no means that PoemWriter won't track the rhyme scheme for this poem.");
+            checkInput = input.nextLine();
+            if(checkInput.equals("yes")) {
+                System.out.println("Returning to main...");
+                return true;
+                
+            } else {
+                System.out.println("Removing the rhyme scheme requirement and returning back to main.");
+                checkingRhyme = false;
+                return false;
+            }
+        }else if(w.phonemes.size() == 0) {
             System.out.println("Can't find the word for " + w.word);
             System.out.println("Do you want to enter the line anyway? ('yes' / 'no')");
             System.out.println("Doing so will stop any automatic rhyming for the poem.");
@@ -111,23 +124,8 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
             }
             }
         } else {
-            if(lines.size() == 0) {
-            System.out.println("Do you want to set a rhyme scheme first? ('yes' / 'no')");
-            System.out.println("Know that saying no means that PoemWriter won't track the rhyme scheme for this poem.");
-            checkInput = input.nextLine();
-            if(checkInput.equals("yes")) {
-                System.out.println("Returning to main...");
-                return true;
-                
-            } else {
-                System.out.println("Removing the rhyme scheme requirement and returning back to main.");
-                checkingRhyme = false;
-                return false;
-            }
-            } else {
             System.out.println("By all accounts, the poem is finished. You can export it, or you can start over.");
             return true;
-            }
         }
     }
 
@@ -139,7 +137,7 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
             System.out.println("By all accounts, the poem is finished. You can export it, or you can start over.");
             return true;
         } else if(l.accurate) {
-            if(!(syllableCount.get(lineEditing) == null)) {
+            if(!(syllableCount.size() == 0)) {
               if(l.syllableCount == syllableCount.get(lineEditing)) {  // If syllables line up
                   return false;
               } else {                                                 // If syllables don't line up
@@ -147,19 +145,19 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
                   return true;
               }
             } else {                                                   // If syllables haven't been set yet
-            System.out.println("Do you want to set your syllable count first? ('yes' / 'no')");
-            System.out.println("Know that saying no means that PoemWriter won't track the syllable count for this poem.");
-            checkInput = input.nextLine();
-            if(checkInput.equals("yes")) {
-                System.out.println("Returning to main to rewrite the line...");
-                return true;
-            } else {
-                System.out.println("Removing the syllable count requirement...");
-                checkingSyllables = false;
-                return false;
+              System.out.println("Do you want to set your syllable count first? ('yes' / 'no')");
+              System.out.println("Know that saying no means that PoemWriter won't track the syllable count for this poem.");
+              checkInput = input.nextLine();
+              if(checkInput.equals("yes")) {
+                  System.out.println("Returning to main to rewrite the line...");
+                  return true;
+              } else {
+                  System.out.println("Removing the syllable count requirement...");
+                  checkingSyllables = false;
+                  return false;
+              }
             }
-            }
-        } else { // poem.size() == 0
+        } else { // Not an accurate syllable count
             System.out.println("It seems that at least one of the words in the line isn't in our database.");
             System.out.println("Do you want to rewrite the lines to get a poem with a syllable count? ('yes' / 'no')");
             System.out.println("Know that saying no means that PoemWriter won't track the syllable count for this poem.");
