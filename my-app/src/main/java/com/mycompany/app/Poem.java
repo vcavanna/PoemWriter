@@ -17,14 +17,27 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
     ArrayList<Line> lines;
     boolean checkingRhyme;
     boolean checkingSyllables;
+    Poet poet;
 
     public Poem() {
         rhymes = new ArrayList<String>();
         wordRhymes = new HashMap<String, String>();
         syllableCount = new ArrayList<Integer>();
         lines = new ArrayList<Line>();
+        poet = Poet.getInstance();
         checkingRhyme = true;
         checkingSyllables = true;
+    }
+
+    public Poem(int lineEditing2, ArrayList<String> rhymes2, HashMap<String, String> wordRhymes2,
+        ArrayList<Integer> syllableCount2, ArrayList<Line> lines2, boolean checkingRhyme2, boolean checkingSyllables2) {
+          this.lineEditing = lineEditing2;
+          this.rhymes = rhymes2;
+          this.wordRhymes = wordRhymes2;
+          this.syllableCount = syllableCount2;
+          this.lines = lines2;
+          this.checkingRhyme = checkingRhyme2;
+          this.checkingSyllables = checkingSyllables2;
     }
 
     public void addLine(Line l) {
@@ -51,7 +64,7 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
     public static Line addLineInfo(String newLine, Line l) {
         Word newWord;
         String[] arrayLine = newLine.split(" ");
-        l.line = newLine;
+        l.text = newLine;
         l.wordCount = arrayLine.length;
         for(String w : arrayLine) {
             // Remove all the extra stuff, capitalizations, etc.
@@ -59,7 +72,7 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
                 newWord = wordMap.get(w.toLowerCase().replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", ""));
             } else {                                 // If no word object exists already, we create our own partial one and let the program know it's know accurate
                 newWord = new Word();
-                newWord.word = w;
+                newWord.text = w;
                 l.accurate = false;
             }
             l.wordData.add(newWord);
@@ -67,6 +80,10 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
         }
         return l;
     }
+
+    public LineType typifyLine(){
+      return LineType.ERROR;
+    };
 
     public void printPoem() {
         int limit = lines.size();
@@ -80,7 +97,7 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
         String checkInput = "";
         if (!checkingRhyme) {
             return false; // Passes rhymeCheck
-        } else if(rhymes.size() == 0) {
+        } else if(rhymes.size() == 0) { // No rhymeScheme 
             System.out.println("Do you want to set a rhyme scheme first? ('yes' / 'no')");
             System.out.println("Know that saying no means that PoemWriter won't track the rhyme scheme for this poem.");
             checkInput = input.nextLine();
@@ -93,8 +110,8 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
                 checkingRhyme = false;
                 return false;
             }
-        }else if(w.phonemes.size() == 0) {
-            System.out.println("Can't find the word for " + w.word);
+        }else if(w.phonemes.size() == 0) { // Rhyming word cannot be found
+            System.out.println("Can't find the word for " + w.text);
             System.out.println("Do you want to enter the line anyway? ('yes' / 'no')");
             System.out.println("Doing so will stop any automatic rhyming for the poem.");
             checkInput = input.nextLine();
@@ -104,15 +121,15 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
             } else {
                 return false;
             }
-        } else if(!(rhymes.get(lineEditing) == null)) {
-            wordRhymes.replace(rhymes.get(lineEditing), "", w.word);
+        } else if(!(rhymes.get(lineEditing) == null)) { // Words don't rhyme
+            wordRhymes.replace(rhymes.get(lineEditing), "", w.text);
             Word rhymingWord = wordMap.get(wordRhymes.get(rhymes.get(lineEditing)));
             System.out.println(rhymingWord);
             System.out.println(w);
             if(w.endsWith(rhymingWord.getRhymeNeeds())) {
             return false;
             } else {
-            System.out.println("The word " + w.word + " and " + rhymingWord.word + " don't rhyme.");
+            System.out.println("The word " + w.text + " and " + rhymingWord.text + " don't rhyme.");
             System.out.println("Do you want to keep the line anyway? (Type 'yes' if you want to override, type 'no' if you want to rewrite the line.)");
             checkInput = input.nextLine();
             if(checkInput.equals("yes")) {
@@ -123,7 +140,7 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
                 return true;
             }
             }
-        } else {
+        } else {  // the rhymesScheme doesn't extend to the line you're trying to edit.
             System.out.println("By all accounts, the poem is finished. You can export it, or you can start over.");
             return true;
         }
@@ -186,13 +203,13 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
   
   public static String saveLine(Line l) {
     String rv = "";
-    rv += l.line + "\n";
+    rv += l.text + "\n";
     rv += l.rhymesWith + "\n";
     rv += l.syllableCount + "\n";
     rv += l.wordCount + "\n";
     for(int i = 0; i < l.wordData.size(); i++) {
       Word w = l.wordData.get(i);
-      rv += w.word + "\n";
+      rv += w.text + "\n";
       rv += w.numberOfSyllables + "\n";
       rv += w.partOfSpeech + "\n";
       rv += w.etymology + "\n";
@@ -282,5 +299,10 @@ public class Poem extends Poet { // TODO: Figure out a way to remove the "Poet" 
     catch(NumberFormatException e) {
       return false;
     }
+  }
+
+  public Poem clone() {
+    Poem aClone = new Poem(this.lineEditing, this.rhymes, this.wordRhymes, this.syllableCount, this.lines, this.checkingRhyme, this.checkingSyllables);
+    return aClone;
   }
 }

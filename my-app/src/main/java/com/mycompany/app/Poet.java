@@ -14,6 +14,9 @@ class Poet{
   static ArrayList<Word> Words;  // Will hold words from the book
   static HashMap<String, Word> wordMap; // Maps Strings to the right Word object 
   static HashMap<String, HashSet<String>> followMap;
+  private static Poet instance;
+  private static final String CMUPronLocation = "C:\\\\Users\\\\Vincent\\\\Documents\\\\computerPrograms\\\\poemWriter\\\\my-app\\\\src\\\\main\\\\java\\\\com\\\\mycompany\\\\app\\\\cmupron.txt";
+  private static final String JaneAustenLocation = "C:\\Users\\Vincent\\Documents\\computerPrograms\\poemWriter\\my-app\\src\\main\\java\\com\\mycompany\\app\\JaneAusten.txt";
   
   // Add a HashMap mapping Strings s to the Word object having s as its word field
   // 1. Declare it as a field
@@ -42,13 +45,17 @@ class Poet{
     writeFollowStory();
   }
   
+  Poet() {
+    readABookMakeUnique(JaneAustenLocation);
+    readCMUPron(CMUPronLocation);
+  }
   
   static void writeFollowStory(){   
     Random generator = new Random(); 
 
     for(int i = 0; i < 10; i++){ // 10 random lines
       int index = generator.nextInt(Words.size());
-      String firstword = Words.get(index).word;
+      String firstword = Words.get(index).text;
       System.out.print(firstword + " ");
       String currentword = firstword;
       for(int j = 0; j < 8; j++){ // 17 words per line
@@ -85,7 +92,7 @@ class Poet{
           Word w = new Word();
           // Fills the "word" field inside w with
           // the jth word on this line of text
-          w.word = wordsOnLine[j].toLowerCase().
+          w.text = wordsOnLine[j].toLowerCase().
             replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", "");
           // We use "\\" to escape special characters in a string
           Words.add(w);
@@ -123,7 +130,7 @@ class Poet{
           Word w = new Word();
           // Fills the "word" field inside w with
           // the jth word on this line of text
-          w.word = wordsOnLine[j].toLowerCase().
+          w.text = wordsOnLine[j].toLowerCase().
             replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", "");
           // We use "\\" to escape special characters in a string
           
@@ -180,7 +187,7 @@ class Poet{
           // We use "\\" to escape special characters in a string
           if(!wordMap.containsKey(word)){ // This will automatically prevent multiple copies
             Word w = new Word(word);
-            wordMap.put(w.word, w);
+            wordMap.put(w.text, w);
           }
           
           // "he is" -> previousWord = "he", word = "is"
@@ -305,7 +312,7 @@ class Poet{
         String requiredStresses = stressPattern.substring(0, randWord.stresses.size());
         if(stressesMatch(requiredStresses, randWord.stresses))
         {
-          poetryLine = poetryLine + randWord.word + " ";
+          poetryLine = poetryLine + randWord.text + " ";
           // Now chop off a prefix consisting of all the stresses we just matched.
           stressPattern = stressPattern.substring(randWord.stresses.size());
         }
@@ -337,7 +344,7 @@ class Poet{
         String requiredStresses = stressPattern.substring(0, randWord.stresses.size());
         if(stressesMatch(requiredStresses, randWord.stresses))
         {
-          poetryLine = poetryLine + randWord.word + " ";
+          poetryLine = poetryLine + randWord.text + " ";
           // Now chop off a prefix consisting of all the stresses we just matched.
           stressPattern = stressPattern.substring(randWord.stresses.size());
         }
@@ -392,7 +399,7 @@ class Poet{
     String remainingMeter = meter.substring(0, numRemainingSyllables); // 100100
     String initialLine = buildLineWithMeter(remainingMeter, 2);
     
-    return initialLine + match.word;
+    return initialLine + match.text;
   }
   
   
@@ -408,5 +415,17 @@ class Poet{
     }
     
     return Words.get(17);  // Default word
+  }
+
+
+  public static Poet getInstance() {
+    if (instance == null) {
+      instance = new Poet();
+    }
+    return instance;
+  }
+
+  public Word getWord(String w) {
+      return wordMap.get(w.toLowerCase().replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", ""));
   }
 }

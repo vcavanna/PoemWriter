@@ -4,7 +4,7 @@ package com.mycompany.app;
 import java.util.ArrayList;
 
 class Word implements Comparable<Word>{
-  String word;  // The actual word
+  String text;  // The actual word
   int numberOfSyllables; // syllable count
   String partOfSpeech; // noun, verb, ...
   String etymology;  // where it came from
@@ -22,7 +22,7 @@ class Word implements Comparable<Word>{
   // Build a word object from a given cmupron line, such as "ZOLLARS  Z AA1 L ER0 Z"
   public Word(String line){
     String[] parts = line.split(" ");
-    this.word = parts[0].toLowerCase()
+    this.text = parts[0].toLowerCase()
       .replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", "");
     this.phonemes = new ArrayList<String>(); // Instantiating these objects in memory
     this.stresses = new ArrayList<Integer>();// Instantiating these objects in memory
@@ -51,7 +51,7 @@ class Word implements Comparable<Word>{
   
   public String toString(){
     String rv = "";
-    rv += "[" + this.word;
+    rv += "[" + this.text;
     rv += ", " + this.numberOfSyllables;
     rv += ", " + this.phonemes.toString();
     rv += ", " + this.stresses.toString();
@@ -63,7 +63,7 @@ class Word implements Comparable<Word>{
   
   @Override
   public boolean equals(Object other){
-    return this.word.equals(((Word)other).word);
+    return this.text.equals(((Word)other).text);
   }
   
   
@@ -71,7 +71,7 @@ class Word implements Comparable<Word>{
   public int compareTo(Word ww2){
     Word w1 = (Word)this;
     Word w2 = (Word)ww2;
-    return w1.word.compareTo(w2.word);
+    return w1.text.compareTo(w2.text);
   }
   
   
