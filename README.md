@@ -20,7 +20,7 @@ Features:
 
 Planned Improvements:
 1. Refactoring. PoemWriter needs to be split into multiple files, although I'm also open to replacing the substitute Java datatypes that we made (preceded by "DS", i.e. DSArrayList) with the standard datatypes. I would follow the principles of the Clean Code book to better understand what would simplify this project.
-2. Removing any snark in the PoemWriter std_out. "I'll take that as a no", "commands", "Dr. Hochberg says", etc.
+2. Removing any sarcastic remark in the PoemWriter std_out. "I'll take that as a no", "commands", "Dr. Hochberg says", etc.
 3. Improving UX by displaying progress, metrics etc and removing phoenetics arrays.
 4. Tidy up the "/ export" command to clearly explain the difference between the first prompt and the second prompt.
 
