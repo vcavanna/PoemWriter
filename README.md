@@ -1,5 +1,5 @@
 # DS2020
-What to Include in your README
+
 <h1>Poetry Text Editor: A command line poetry writing assistant </h1>
 
 <h2>Project Description</h2>
